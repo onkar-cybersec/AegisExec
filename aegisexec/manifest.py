@@ -68,7 +68,7 @@ class ManifestManager:
             raw = manifest_path_or_str
         else:
             with open(manifest_path_or_str, "r", encoding="utf-8") as f:
-                raw = f.read()
+                raw = f.read(1024 * 1024 + 1)
 
         data = validate_json_string(raw)
         validated = validate_tool_manifest(data)
@@ -96,7 +96,7 @@ class ManifestManager:
                 m_dict = validate_json_string(manifest_raw)
             else:
                 with open(manifest_raw, "r", encoding="utf-8") as f:
-                    m_dict = validate_json_string(f.read())
+                    m_dict = validate_json_string(f.read(1024 * 1024 + 1))
         else:
             m_dict = manifest_raw
 
@@ -105,7 +105,7 @@ class ManifestManager:
                 b_dict = validate_json_string(baseline_raw)
             else:
                 with open(baseline_raw, "r", encoding="utf-8") as f:
-                    b_dict = validate_json_string(f.read())
+                    b_dict = validate_json_string(f.read(1024 * 1024 + 1))
         else:
             b_dict = baseline_raw
 

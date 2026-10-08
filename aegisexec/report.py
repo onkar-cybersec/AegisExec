@@ -24,23 +24,26 @@ def parse_audit_log(jsonl_path: str) -> List[Dict[str, Any]]:
     entries: List[Dict[str, Any]] = []
     total_bytes_read = 0
 
-    with open(jsonl_path, "r", encoding="utf-8", errors="replace") as f:
-        for line in f:
-            total_bytes_read += len(line.encode("utf-8"))
-            if total_bytes_read > MAX_AUDIT_REPORT_BYTES:
+    with open(jsonl_path, "rb") as f:
+        while len(entries) < MAX_AUDIT_RECORDS:
+            line = f.readline(min(MAX_LINE_BYTES + 1, MAX_AUDIT_REPORT_BYTES - total_bytes_read + 1))
+            if not line:
                 break
+            total_bytes_read += len(line)
+            if total_bytes_read > MAX_AUDIT_REPORT_BYTES:
+                raise ValueError('Audit report input exceeds byte budget')
             if len(line) > MAX_LINE_BYTES:
-                continue
+                raise ValueError('Audit record exceeds byte budget')
 
             line_str = line.strip()
             if not line_str:
                 continue
 
             try:
-                item = json.loads(line_str)
+                item = json.loads(line_str.decode('utf-8'))
                 if isinstance(item, dict):
                     entries.append(item)
-            except json.JSONDecodeError:
+            except (json.JSONDecodeError, UnicodeDecodeError):
                 continue
 
             if len(entries) >= MAX_AUDIT_RECORDS:

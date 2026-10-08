@@ -116,7 +116,7 @@ const PRESET_POLICIES: Record<string, PolicyRule> = {
     schema_version: "1.0",
     policy_id: "pol-developer-v1",
     name: "Developer Sandboxed Workspace",
-    description: "Requires explicit operator approval token for Python execution, 30s timeout",
+    description: "Approval-required Python is disabled in v0.1; tokens cannot authorize execution",
     workspace_root: "/home/user/agent_workspace",
     allowed_operations: ["read_text", "list_dir", "run_python"],
     path_rules: {
@@ -490,13 +490,13 @@ export default function App() {
 
       // Approval requirement check
       if (policy.require_approval_for?.includes(op)) {
-        if (!req.approval || !req.approval.token) {
+        {
           const dec: SimulatedDecision = {
             decision_id: `dec-deny-${Math.random().toString(16).slice(2, 10)}`,
             status: 'DENIED',
             operation: op,
-            reason: `Operation '${op}' requires explicit operator approval token`,
-            remediation: 'Provide an approval object with approved_by and authorized token.',
+            reason: `Operation '${op}' requires an approval mechanism unavailable in v0.1`,
+            remediation: 'Approval-required operations fail closed; a supplied token cannot authorize them.',
             matched_rules: ['access_control.approval_required'],
             evidence: { operation: op, approval_present: false },
             is_simulation: true,
@@ -974,7 +974,7 @@ export default function App() {
                       {/* Sanitized Evidence */}
                       <div className="bg-neutral-950/80 border border-neutral-800 rounded-lg p-3 space-y-1">
                         <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
-                          Sanitized Evidence (Zero Leaked Secrets):
+                          Simulated decision details:
                         </span>
                         <pre className="text-[11px] font-mono text-neutral-300 overflow-x-auto bg-neutral-900/70 p-2 rounded border border-neutral-800">
                           {JSON.stringify(simulatedDecision.evidence, null, 2)}
@@ -1023,7 +1023,7 @@ export default function App() {
                   1. Workspace Guard
                 </div>
                 <p className="text-[11px] text-neutral-400 leading-snug">
-                  Realpath containment, directory traversal rejection, and blocked sensitive credential paths.
+                  Descriptor-relative paths reject traversal, symlinks, hardlinks and common credential names.
                 </p>
               </div>
 
@@ -1033,7 +1033,7 @@ export default function App() {
                   2. Network Egress Denial
                 </div>
                 <p className="text-[11px] text-neutral-400 leading-snug">
-                  Strict zero outbound networking in sandbox (--unshare-net). Blocked sockets, no raw internet.
+                  An isolated network namespace has no host network interfaces or outbound connectivity.
                 </p>
               </div>
 
@@ -1043,7 +1043,7 @@ export default function App() {
                   3. Command Denial
                 </div>
                 <p className="text-[11px] text-neutral-400 leading-snug">
-                  No shell=True, no arbitrary user binaries. Fixed trusted worker harness under /usr/bin/python3.
+                  The broker accepts only fixed operations. Python can launch runtime binaries inside its sandbox.
                 </p>
               </div>
 
@@ -1053,7 +1053,7 @@ export default function App() {
                   4. Privilege Denial
                 </div>
                 <p className="text-[11px] text-neutral-400 leading-snug">
-                  --cap-drop ALL, --no-new-privileges. Approval tokens never bypass sandbox isolation invariants.
+                  --cap-drop ALL and Bubblewrap's no-new-privileges protection. Approval-required actions fail closed.
                 </p>
               </div>
 
@@ -1063,7 +1063,7 @@ export default function App() {
                   5. Manifest Drift TOFU
                 </div>
                 <p className="text-[11px] text-neutral-400 leading-snug">
-                  Canonical SHA256 baseline catches prompt injection & capability expansion. Never runs unpinned tools.
+                  SHA256 comparison flags description and capability changes for review; it does not prove tool safety.
                 </p>
               </div>
             </div>

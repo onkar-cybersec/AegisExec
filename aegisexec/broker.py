@@ -168,14 +168,15 @@ class AegisBroker:
             execution_error = f"Execution error: {exc}"
             execution_summary = {"error": type(exc).__name__}
 
-        # Log audit entry
+        execution_failed = execution_error is not None or (op == 'run_python' and execution_summary.get('exit_code') != 0)
+        # Log outcome without treating a nonzero worker exit as success.
         self.audit_logger.log(
             event_type="OPERATION_EXECUTION",
             decision_id=decision.decision_id,
             request_id=req_id,
             operation=op,
-            status="EXECUTED" if not execution_error else "EXECUTION_FAILED",
-            reason=execution_error or f"Operation {op} executed successfully",
+            status="EXECUTION_FAILED" if execution_failed else "EXECUTED",
+            reason=execution_error or ('Worker execution failed or exceeded limits' if execution_failed else f"Operation {op} executed successfully"),
             matched_rules=decision.matched_rules,
             evidence=decision.evidence,
             execution_summary=execution_summary,

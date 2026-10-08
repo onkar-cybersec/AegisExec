@@ -28,6 +28,9 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 def cmd_init(args: argparse.Namespace) -> int:
     """Initialize AegisExec workspace with default policy, tools, and sample requests."""
     target_dir = os.path.abspath(args.directory)
+    if os.path.exists(target_dir) and (not os.path.isdir(target_dir) or os.listdir(target_dir)):
+        print('Initialization requires a new or empty directory; existing files were not changed.', file=sys.stderr)
+        return 2
     os.makedirs(target_dir, exist_ok=True)
     os.makedirs(os.path.join(target_dir, "requests"), exist_ok=True)
     os.makedirs(os.path.join(target_dir, "workspace"), exist_ok=True)

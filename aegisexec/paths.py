@@ -17,10 +17,10 @@ def validate_raw_path_string(path):
     if '\x00' in path:
         raise PathValidationError('Null byte injection denied')
     if '\\' in path or os.path.isabs(path):
-        raise PathValidationError('Only POSIX workspace-relative paths are supported')
+        raise PathValidationError('Absolute paths are forbidden; use POSIX workspace-relative paths')
     parts=path.split('/')
     if '..' in parts:
-        raise PathValidationError("Raw directory traversal token '..' denied")
+        raise PathValidationError("Raw directory traversal token '..' detected")
     return [p for p in parts if p not in ('','.')] 
 
 def _directory(parent,name):

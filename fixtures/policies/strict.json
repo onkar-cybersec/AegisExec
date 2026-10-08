@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "pol-strict-v1",
+  "name": "Strict Workspace Isolation Policy",
+  "description": "Restricts operations strictly to workspace with 15s timeout and zero network egress",
+  "workspace_root": "./workspace",
+  "allowed_operations": [
+    "read_text",
+    "list_dir",
+    "run_python"
+  ],
+  "path_rules": {
+    "allowed_subpaths": [],
+    "denied_patterns": [
+      ".env",
+      ".git",
+      ".ssh",
+      ".aws",
+      ".azure"
+    ],
+    "max_file_read_bytes": 1048576
+  },
+  "execution_rules": {
+    "max_timeout_seconds": 15,
+    "max_output_bytes": 65536,
+    "max_memory_mb": 256,
+    "allow_network": false
+  },
+  "require_approval_for": [],
+  "audit": {
+    "enabled": true,
+    "log_path": "./audit.jsonl"
+  }
+}

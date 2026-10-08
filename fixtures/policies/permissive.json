@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "pol-developer-v1",
+  "name": "Developer Sandboxed Workspace Policy",
+  "description": "Developer policy with higher timeout (30s) and explicit approval required for python code",
+  "workspace_root": "./workspace",
+  "allowed_operations": [
+    "read_text",
+    "list_dir",
+    "run_python"
+  ],
+  "path_rules": {
+    "allowed_subpaths": [],
+    "denied_patterns": [
+      ".env",
+      ".ssh"
+    ],
+    "max_file_read_bytes": 5242880
+  },
+  "execution_rules": {
+    "max_timeout_seconds": 30,
+    "max_output_bytes": 131072,
+    "max_memory_mb": 512,
+    "allow_network": false
+  },
+  "require_approval_for": [
+    "run_python"
+  ],
+  "audit": {
+    "enabled": true,
+    "log_path": "./audit.jsonl"
+  }
+}

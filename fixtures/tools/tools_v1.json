@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "manifest_id": "manifest-core-tools-v1",
+  "tools": [
+    {
+      "name": "safe_read_file",
+      "description": "Reads authorized UTF-8 text file from workspace root",
+      "operation": "read_text",
+      "parameters_schema": {
+        "path": {
+          "type": "string",
+          "description": "Relative file path"
+        }
+      },
+      "risk_level": "low"
+    },
+    {
+      "name": "list_workspace",
+      "description": "Lists directory entries inside workspace",
+      "operation": "list_dir",
+      "parameters_schema": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "risk_level": "low"
+    },
+    {
+      "name": "sandboxed_calc",
+      "description": "Executes isolated Python computations without network",
+      "operation": "run_python",
+      "parameters_schema": {
+        "code": {
+          "type": "string"
+        }
+      },
+      "risk_level": "medium"
+    }
+  ]
+}

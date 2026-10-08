@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "baseline_type": "aegisexec_tool_baseline",
+  "manifest_id": "manifest-core-tools-v1",
+  "canonical_sha256": "d4b9f201f172182dd828506d589c4e036445cc44ae8fd3c9151d5168a3ce171d",
+  "tool_count": 3,
+  "tool_hashes": {
+    "list_workspace": "e1df8001612811171e356ed70d486a954c33d309dd72b4d563a10213cdc50465",
+    "safe_read_file": "e2056eb415f2f58827dd951ae813820311f07fbef4bd44c27420f398e50bf299",
+    "sandboxed_calc": "559f5049664d9cbfa931d6340135d073a1ec3e226293648f1b26e02e433f2c29"
+  },
+  "tools_snapshot": [
+    {
+      "name": "list_workspace",
+      "description": "Lists directory entries inside workspace",
+      "operation": "list_dir",
+      "parameters_schema": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "risk_level": "low"
+    },
+    {
+      "name": "safe_read_file",
+      "description": "Reads authorized UTF-8 text file from workspace root",
+      "operation": "read_text",
+      "parameters_schema": {
+        "path": {
+          "type": "string",
+          "description": "Relative file path"
+        }
+      },
+      "risk_level": "low"
+    },
+    {
+      "name": "sandboxed_calc",
+      "description": "Executes isolated Python computations without network",
+      "operation": "run_python",
+      "parameters_schema": {
+        "code": {
+          "type": "string"
+        }
+      },
+      "risk_level": "medium"
+    }
+  ]
+}

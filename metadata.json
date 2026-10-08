@@ -1,0 +1,6 @@
+{
+  "name": "AegisExec - Defensive AI-Agent Action Broker",
+  "description": "Defensive Linux AI-agent action broker CLI with Bubblewrap sandboxing and policy explorer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

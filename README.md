@@ -73,6 +73,10 @@ The suite covers schema and quota rejection, traversal, symlink swaps, hardlinks
 
 [View test runs](https://github.com/onkar-cybersec/AegisExec/actions)
 
+**Verified:** 69 tests passed with no skips in mandatory Linux CI, including 17 sandbox execution tests; the CLI smoke workflow also passed. [Reviewed source test run](https://github.com/onkar-cybersec/AegisExec/actions/runs/37754508256).
+
+![Actual Linux regression test results](docs/screenshots/linux-tests.jpg)
+
 ## Optional policy explorer
 
 The React interface uses synthetic examples and makes **simulated** policy decisions. It does not call a model, execute Python, or enforce a host sandbox. Its checks are illustrative; use the CLI as the authoritative implementation. No AI API key is required.

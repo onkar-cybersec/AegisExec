@@ -1,0 +1,17 @@
+name: Linux sandbox environment probe
+on:
+  push:
+    branches: [sandbox-probe]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - name: Install official distribution sandbox package
+        run: sudo apt-get update && sudo apt-get install -y bubblewrap
+      - name: Verify isolated Linux runtime without changing host protections
+        run: |
+          /usr/bin/bwrap --version
+          /usr/bin/bwrap --unshare-all --new-session --die-with-parent --cap-drop ALL --ro-bind /usr /usr --ro-bind /lib /lib --ro-bind /lib64 /lib64 --proc /proc --dev /dev --tmpfs /tmp --clearenv --setenv PATH /usr/bin:/bin /usr/bin/python3 -I -c 'import os; print("isolated Linux Python works"); print(open("/proc/self/status").read())'
